@@ -1,9 +1,20 @@
 # SpeedVue
 
----
-
 ### An AI powered hiring pipeline engine.
 Put hundreds of potential job candidates through an advanced screening process in a matter of minutes.
+
+---
+
+### How to test:
+This project is currently in the testing phase - no webui is available yet.\
+To test it's functionality, create this file structure:
+* data
+  * videos
+    * [your interview videos here]
+  * audio
+    * [leave empty]
+
+In the main file, you can then choose the file to analyze by specifying it's path.
 
 ---
 
@@ -13,3 +24,9 @@ Put hundreds of potential job candidates through an advanced screening process i
 * Create new environment: `conda env create -f environment.yml`
 * Activate the new environment: `conda activate InterVue`
 * Run: `python3 main.py`
+
+---
+
+### Dependencies:
+This tool requires `ffmpeg`, `python 8`, `pip` and `ollma` to be installed.\
+Any python-related dependencies are automatically installed via conda (see 'How to run').
