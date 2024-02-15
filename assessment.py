@@ -7,8 +7,10 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import OllamaEmbeddings
 from langchain_community.document_loaders import WebBaseLoader
 
-from colorama import Fore
-from colorama import Style
+import torch
+import whisper
+
+from colorama import Fore, Style
 
 from os.path import exists
 
@@ -16,22 +18,32 @@ import tiktoken
 
 from googlesearch import search
 
-# factcheck_db - google search rag - PERSISTENT
-# candidate_XXXXXX_db - specific candidate trivia rag - RAM -> ARCHIVE
+# factcheck_db - google search rag - PERSISTENT | available globally | !potential issue vector!
+# candidate_XXXXXX_db - specific candidate trivia rag - RAM -> ARCHIVE | available only in the assessment scope
+
+# MODELS: zephyr:7b-beta-q5_K_M is really the minimum i will allow for the basic evaluation
+#         for master_, we have to find something much better to give more insight based on the responses.
+#         for embedding_, choice is between MiniLM-L6 and Glove, but probably MiniLM-L6 is the much better option.
 
 model_name = "zephyr:7b-beta-q5_K_M"  # "llama2-uncensored:7b"
 model_base_name = model_name.split(':')[0]
 token_limit = 4096  # depending on VRAM, try 2048, 3072 or 4096. 2048 works great on 4GB VRAM
 llm = Ollama(model=model_name)
-embeddings = OllamaEmbeddings(model=model_name)
 
 master_model_name = "zephyr:7b-beta-q5_K_M"  # "llama2-uncensored:7b"
-master_model_base_name = model_name.split(':')[0]
-master_token_limit = 4096  # depending on VRAM, try 2048, 3072 or 4096. 2048 works great on 4GB VRAM
-master_llm = Ollama(model=model_name)
-master_embeddings = OllamaEmbeddings(model=model_name)
+master_model_base_name = master_model_name.split(':')[0]
+master_token_limit = 4096
+master_llm = Ollama(model=master_model_name)
 
-encoder = tiktoken.get_encoding("cl100k_base")
+embedding_model_name = "zephyr:7b-beta-q5_K_M"
+embedding_model_base_name = model_name.split(':')[0]
+embedding_token_limit = 4096
+embeddings = OllamaEmbeddings(model=model_name)
+
+DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+transcription_model = whisper.load_model("base.en")
+
+token_encoder = tiktoken.get_encoding("cl100k_base")
 output_parser = StrOutputParser()
 
 
@@ -50,15 +62,28 @@ class StandardTaskResponse(StandardTask):
     _video_path: str
     _transcript: str = None
 
-    def __init__(self, file_name: str, task_text: str):
-        super().__init__(task_text)
-        self.video_path = file_name
+    def generate_transcript(self):
+        short_filename = self._video_path.split('.')[0].split('/')[-1]
+        transcription_path = f"data/text/{short_filename}.txt"
+        if exists(transcription_path):
+            with open(transcription_path, 'r') as file:
+                self._transcript = file.read().replace('\n', ' ')
+        else:
+            self._transcript = transcription_model.transcribe(self._video_path)["text"]
+            with open(transcription_path, 'w') as file:
+                file.write(self._transcript)
+            print(f"{Fore.GREEN}{Style.BRIGHT}Transcription:{Fore.RESET}{Style.RESET_ALL}", self._transcript)
 
     def get_transcript(self):
-        # todo: add whisper support
         if self._transcript is None:
-            self._transcript = 'lorem ipsum'
+            self.generate_transcript()
+
         return self._transcript
+
+    def __init__(self, file_name: str, task_text: str, transcript: str = None):
+        super().__init__(task_text)
+        self._video_path = file_name
+        self.generate_transcript()
 
 
 def generate_response_summarization(user_response: StandardTaskResponse):

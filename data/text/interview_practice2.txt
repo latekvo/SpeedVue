@@ -1,0 +1,23 @@
+This is kind of a hard question to answer because I'm constantly achieving a new
+completing new apps getting new people,
+new connections which all I view as a good career points for example.
+The past week, I've managed to finish a research app which interacts with app.
+I thought about it in the previous interview question.
+Um And  I view that as a huge achievement because it taught me a lot of new technologies.
+I didn't know about vector databases before about.
+This was actually one of my first projects serious projects in Python.
+Before I only worked on modifying another project but not writing it from ground up.
+The previous project was localising ChatDev which
+is an app which allows you to write applications with just a single prompt.
+It creates a whole company of AI agents which then
+split tasks about a among themselves and complete the whole application in a matter of hours.
+And previously, it used the open AI api but right now I changed it to use local models which run on your my machine.
+One second, I've got a helicopter outside my window.
+And so all of these large projects which I do significantly improve what I can
+do with different languages, with apps, I can write.
+They contribute to the performance that I've got the skill set.
+It may be a controversial view, but I also see the people that I meet as very,
+as huge um career achievements. Because with each engineer that I meet,
+I learn new things about not only programming itself but about
+environment surrounding it.
+And yeah, that's about it.

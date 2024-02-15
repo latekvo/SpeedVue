@@ -81,6 +81,7 @@ dependencies:
   - yarl=1.9.4=py38h01eb140_0
   - zlib=1.2.13=h5eee18b_0
   - pip:
+      - git+https://github.com/openai/whisper.git
       - beautifulsoup4==4.12.3
       - google==3.0.0
       - soupsieve==2.5

@@ -4,9 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="abdffcd6-834d-4906-9f0c-015e2aaaf545" name="Changes" comment="- laid out complete summarization function along with its main chain&#10;- created the master prompt&#10;- added a folder for recordings&#10;- expanded README for test running and dependencies">
+    <list default="true" id="abdffcd6-834d-4906-9f0c-015e2aaaf545" name="Changes" comment="- created prompts and chains for every sub-agents available&#10;- added clear verbosity to each agent&#10;- created general plans of future improvements / changes">
+      <change afterPath="$PROJECT_DIR$/data/text/interview_practice2.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/text/interview_practice3.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/assessment.py" beforeDir="false" afterPath="$PROJECT_DIR$/assessment.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/environment.yml" beforeDir="false" afterPath="$PROJECT_DIR$/environment.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -36,16 +39,16 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.main.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "/home/armado/dev/ai/ResearchChain",
-    "settings.editor.selected.configurable": "reference.settings.ide.settings.notifications"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/armado/dev/ai/ResearchChain&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.ide.settings.notifications&quot;
   }
-}]]></component>
+}</component>
   <component name="PyConsoleOptionsProvider">
     <option name="myPythonConsoleState">
       <console-settings module-name="InterVue" is-module-sdk="true">
@@ -119,13 +122,22 @@
       <option name="project" value="LOCAL" />
       <updated>1707953108618</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="- created prompts and chains for every sub-agents available&#10;- added clear verbosity to each agent&#10;- created general plans of future improvements / changes">
+      <option name="closed" value="true" />
+      <created>1707960859171</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1707960859171</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="code init + conda env" />
     <MESSAGE value="- add initial project base code&#10;- add README with instructions to run" />
     <MESSAGE value="- laid out complete summarization function along with its main chain&#10;- created the master prompt&#10;- added a folder for recordings&#10;- expanded README for test running and dependencies" />
-    <option name="LAST_COMMIT_MESSAGE" value="- laid out complete summarization function along with its main chain&#10;- created the master prompt&#10;- added a folder for recordings&#10;- expanded README for test running and dependencies" />
+    <MESSAGE value="- created prompts and chains for every sub-agents available&#10;- added clear verbosity to each agent&#10;- created general plans of future improvements / changes" />
+    <option name="LAST_COMMIT_MESSAGE" value="- created prompts and chains for every sub-agents available&#10;- added clear verbosity to each agent&#10;- created general plans of future improvements / changes" />
   </component>
 </project>
