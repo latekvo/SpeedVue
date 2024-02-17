@@ -1,4 +1,5 @@
 # InterVue is already taken, find a different name :)
+# This file is the server part of this project
 # | Interly | FlyView | SpeedVue | TopInterview | GpVue
 from colorama import init as colorama_init
 
@@ -6,16 +7,24 @@ from assessment import StandardTaskResponse, generate_response_summarization, St
 
 colorama_init()
 
-filename = "data/videos/interview_practice3.webm"
+response_list = [
+    StandardTaskResponse(
+        file_name='data/videos/interview_practice1.webm',
+        task_text='Introduce yourself. Why should we hire you?'
+    ),
+    StandardTaskResponse(
+        file_name='data/videos/interview_practice2.webm',
+        task_text='What was the greatest achievement in your career?'
+    ),
+    StandardTaskResponse(
+        file_name='data/videos/interview_practice3.webm',
+        task_text='What was a difficult situation you were in? How did you deal with it?'
+    ),
+    StandardTaskResponse(
+        file_name='data/videos/interview_practice4.webm',
+        task_text='Introduce yourself. Why should we hire you?'
+    ),
+]
 
-task_2 = 'What was the greatest achievement in your career?'
-task_3 = 'What was a difficult situation you were in? How did you deal with it?'
-
-example_task = StandardTask(task_3)
-
-example_task_response = StandardTaskResponse(
-    file_name=filename,
-    task_text=example_task.task_text,
-)
-
-generate_response_summarization(example_task_response)
+for response in response_list:
+    generate_response_summarization(response)

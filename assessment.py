@@ -1,10 +1,13 @@
+# This file is the langchain part of this project
+import json
+
 from langchain_community.llms.ollama import Ollama
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnableLambda
+from langchain_community.embeddings import OllamaEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_community.embeddings import OllamaEmbeddings
 from langchain_community.document_loaders import WebBaseLoader
 
 import torch
@@ -59,17 +62,17 @@ class StandardTask:
 
 class StandardTaskResponse(StandardTask):
     # video response + transcription
-    _video_path: str
+    video_path: str
     _transcript: str = None
 
     def generate_transcript(self):
-        short_filename = self._video_path.split('.')[0].split('/')[-1]
+        short_filename = self.video_path.split('.')[0].split('/')[-1]
         transcription_path = f"data/text/{short_filename}.txt"
         if exists(transcription_path):
             with open(transcription_path, 'r') as file:
                 self._transcript = file.read().replace('\n', ' ')
         else:
-            self._transcript = transcription_model.transcribe(self._video_path)["text"]
+            self._transcript = transcription_model.transcribe(self.video_path)["text"]
             with open(transcription_path, 'w') as file:
                 file.write(self._transcript)
             print(f"{Fore.GREEN}{Style.BRIGHT}Transcription:{Fore.RESET}{Style.RESET_ALL}", self._transcript)
@@ -82,11 +85,14 @@ class StandardTaskResponse(StandardTask):
 
     def __init__(self, file_name: str, task_text: str, transcript: str = None):
         super().__init__(task_text)
-        self._video_path = file_name
+        self.video_path = file_name
         self.generate_transcript()
 
 
 def generate_response_summarization(user_response: StandardTaskResponse):
+
+    cache_accuracy = cache_knowledge = cache_focus = cache_independence = cache_factuality = "No data."
+
     def get_task(params: dict) -> str:
         # return the original prompt given to user
         return params['task']
@@ -94,7 +100,10 @@ def generate_response_summarization(user_response: StandardTaskResponse):
     def get_user_accuracy(params: dict) -> str:
         # INCOMPLETE
         # a loop of Google/rag and llm. for now a fixed amount of runs (5)
-        return "No data."
+        accuracy_response = "No data."
+        nonlocal cache_accuracy
+        cache_accuracy = accuracy_response
+        return accuracy_response
 
     def get_user_knowledge(params: dict) -> str:
         # summarize richness of knowledge of the user
@@ -121,6 +130,8 @@ def generate_response_summarization(user_response: StandardTaskResponse):
         print(f"{Fore.CYAN}{Style.BRIGHT}Knowledge response:{Fore.RESET}{Style.RESET_ALL}",
               knowledge_response)
 
+        nonlocal cache_knowledge
+        cache_knowledge = knowledge_response
         return knowledge_response
 
     def get_user_focus(params: dict) -> str:
@@ -146,6 +157,8 @@ def generate_response_summarization(user_response: StandardTaskResponse):
         print(f"{Fore.CYAN}{Style.BRIGHT}Focus response:{Fore.RESET}{Style.RESET_ALL}",
               focus_response)
 
+        nonlocal cache_focus
+        cache_focus = focus_response
         return focus_response
 
     def get_user_independence(params: dict) -> str:
@@ -170,6 +183,8 @@ def generate_response_summarization(user_response: StandardTaskResponse):
         print(f"{Fore.CYAN}{Style.BRIGHT}Independence response:{Fore.RESET}{Style.RESET_ALL}",
               independence_response)
 
+        nonlocal cache_independence
+        cache_independence = independence_response
         return independence_response
 
     def get_user_factuality(params: dict) -> str:
@@ -200,10 +215,12 @@ def generate_response_summarization(user_response: StandardTaskResponse):
         print(f"{Fore.CYAN}{Style.BRIGHT}Factuality response:{Fore.RESET}{Style.RESET_ALL}",
               factuality_response)
 
+        nonlocal cache_factuality
+        cache_factuality = factuality_response
         return factuality_response
 
     summarization_prompt = ChatPromptTemplate.from_messages([
-        ("system", "You are a hiring manager AI"
+        ("system", "You are a hiring manager."
                    "Your job is to summarize eligibility of employment of this particular candidate."
                    "You are presented with summarized performance of this candidate."
                    "on why this candidate is eligible or not eligible for employment."
@@ -239,5 +256,23 @@ def generate_response_summarization(user_response: StandardTaskResponse):
     complete_assessment_response = assess_transcript_chain.invoke(standard_input)
     print(f"{Fore.CYAN}{Style.BRIGHT}Complete assessment response:{Fore.RESET}{Style.RESET_ALL}",
           complete_assessment_response)
+
+    # Save results to a file
+    short_filename = user_response.video_path.split('.')[0].split('/')[-1]
+    json_data = json.dumps({
+        'task': user_response.task_text,
+        'assessment': complete_assessment_response,
+        'cache_accuracy': cache_accuracy,
+        'cache_knowledge': cache_knowledge,
+        'cache_focus': cache_focus,
+        'cache_independence': cache_independence,
+        'cache_factuality': cache_factuality
+    })
+    save_path = f"data/summaries/{short_filename}.json"
+    if exists(save_path):
+        print(f"{Fore.YELLOW}{Style.BRIGHT}Assessment already present, overwriting!{Fore.RESET}{Style.RESET_ALL}")
+
+    with open(save_path, 'w') as file:
+        file.write(json_data)
 
     return complete_assessment_response

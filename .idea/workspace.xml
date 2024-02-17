@@ -4,12 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="abdffcd6-834d-4906-9f0c-015e2aaaf545" name="Changes" comment="- created prompts and chains for every sub-agents available&#10;- added clear verbosity to each agent&#10;- created general plans of future improvements / changes">
-      <change afterPath="$PROJECT_DIR$/data/text/interview_practice2.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/text/interview_practice3.txt" afterDir="false" />
+    <list default="true" id="abdffcd6-834d-4906-9f0c-015e2aaaf545" name="Changes" comment="- added whisper support, files are now automatically transcribed from both audio, and video files&#10;- added example running cases, along with their transcriptions, all tests passed&#10;- environment.yml changes&#10;- entire pipeline has been tested multiple times, returning consistent results&#10;- fixes regarding model usage">
+      <change afterPath="$PROJECT_DIR$/data/summaries/interview_practice1.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/summaries/interview_practice2.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/summaries/interview_practice3.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/summaries/interview_practice4.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/text/interview_practice1.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/text/interview_practice4.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/assessment.py" beforeDir="false" afterPath="$PROJECT_DIR$/assessment.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/environment.yml" beforeDir="false" afterPath="$PROJECT_DIR$/environment.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -130,7 +135,15 @@
       <option name="project" value="LOCAL" />
       <updated>1707960859171</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="- added whisper support, files are now automatically transcribed from both audio, and video files&#10;- added example running cases, along with their transcriptions, all tests passed&#10;- environment.yml changes&#10;- entire pipeline has been tested multiple times, returning consistent results&#10;- fixes regarding model usage">
+      <option name="closed" value="true" />
+      <created>1708041164999</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1708041164999</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -138,6 +151,7 @@
     <MESSAGE value="- add initial project base code&#10;- add README with instructions to run" />
     <MESSAGE value="- laid out complete summarization function along with its main chain&#10;- created the master prompt&#10;- added a folder for recordings&#10;- expanded README for test running and dependencies" />
     <MESSAGE value="- created prompts and chains for every sub-agents available&#10;- added clear verbosity to each agent&#10;- created general plans of future improvements / changes" />
-    <option name="LAST_COMMIT_MESSAGE" value="- created prompts and chains for every sub-agents available&#10;- added clear verbosity to each agent&#10;- created general plans of future improvements / changes" />
+    <MESSAGE value="- added whisper support, files are now automatically transcribed from both audio, and video files&#10;- added example running cases, along with their transcriptions, all tests passed&#10;- environment.yml changes&#10;- entire pipeline has been tested multiple times, returning consistent results&#10;- fixes regarding model usage" />
+    <option name="LAST_COMMIT_MESSAGE" value="- added whisper support, files are now automatically transcribed from both audio, and video files&#10;- added example running cases, along with their transcriptions, all tests passed&#10;- environment.yml changes&#10;- entire pipeline has been tested multiple times, returning consistent results&#10;- fixes regarding model usage" />
   </component>
 </project>

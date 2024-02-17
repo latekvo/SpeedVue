@@ -12,7 +12,11 @@ To test it's functionality, create this file structure:
   * videos
     * [your interview videos here]
   * audio
-    * [leave empty]
+    * [alternative to videos]
+  * web
+    * [web assets, leave empty]
+  * summaries
+    * [cached end results of individual assessments]
 
 In the main file, you can then choose the file to analyze by specifying it's path.
 
@@ -28,5 +32,5 @@ In the main file, you can then choose the file to analyze by specifying it's pat
 ---
 
 ### Dependencies:
-This tool requires `ffmpeg`, `python 8`, `pip` and `ollma` to be installed.\
+This tool requires `ffmpeg`, `python 8`, `conda` and `ollma` to be installed.\
 Any python-related dependencies are automatically installed via conda (see 'How to run').
