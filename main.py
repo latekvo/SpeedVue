@@ -3,7 +3,7 @@
 # | Interly | FlyView | SpeedVue | TopInterview | GpVue
 from colorama import init as colorama_init
 
-from assessment import StandardTaskResponse, generate_response_summarization, StandardTask
+from assessment import StandardTaskResponse, generate_response_summarization, is_candidate_viable
 
 colorama_init()
 
@@ -27,4 +27,9 @@ response_list = [
 ]
 
 for response in response_list:
-    generate_response_summarization(response)
+    generate_response_summarization(response, overwrite=False)
+
+is_candidate_viable('interview_practice1')
+is_candidate_viable('interview_practice2')
+is_candidate_viable('interview_practice3')
+is_candidate_viable('interview_practice4')

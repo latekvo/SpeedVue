@@ -28,10 +28,10 @@ from googlesearch import search
 #         for master_, we have to find something much better to give more insight based on the responses.
 #         for embedding_, choice is between MiniLM-L6 and Glove, but probably MiniLM-L6 is the much better option.
 
-model_name = "zephyr:7b-beta-q5_K_M"  # "llama2-uncensored:7b"
-model_base_name = model_name.split(':')[0]
-token_limit = 4096  # depending on VRAM, try 2048, 3072 or 4096. 2048 works great on 4GB VRAM
-llm = Ollama(model=model_name)
+basic_model_name = "zephyr:7b-beta-q5_K_M"  # "llama2-uncensored:7b"
+basic_model_base_name = basic_model_name.split(':')[0]
+basic_token_limit = 4096  # depending on VRAM, try 2048, 3072 or 4096. 2048 works great on 4GB VRAM
+basic_llm = Ollama(model=basic_model_name)
 
 master_model_name = "zephyr:7b-beta-q5_K_M"  # "llama2-uncensored:7b"
 master_model_base_name = master_model_name.split(':')[0]
@@ -39,9 +39,9 @@ master_token_limit = 4096
 master_llm = Ollama(model=master_model_name)
 
 embedding_model_name = "zephyr:7b-beta-q5_K_M"
-embedding_model_base_name = model_name.split(':')[0]
+embedding_model_base_name = embedding_model_name.split(':')[0]
 embedding_token_limit = 4096
-embeddings = OllamaEmbeddings(model=model_name)
+embeddings = OllamaEmbeddings(model=embedding_model_name)
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 transcription_model = whisper.load_model("base.en")
@@ -89,8 +89,7 @@ class StandardTaskResponse(StandardTask):
         self.generate_transcript()
 
 
-def generate_response_summarization(user_response: StandardTaskResponse):
-
+def generate_response_summarization(user_response: StandardTaskResponse, overwrite: bool = False):
     cache_accuracy = cache_knowledge = cache_focus = cache_independence = cache_factuality = "No data."
 
     def get_task(params: dict) -> str:
@@ -122,7 +121,7 @@ def generate_response_summarization(user_response: StandardTaskResponse):
 
         knowledge_chain = (
             knowledge_prompt |
-            llm |
+            basic_llm |
             output_parser
         )
 
@@ -149,7 +148,7 @@ def generate_response_summarization(user_response: StandardTaskResponse):
 
         focus_chain = (
             focus_prompt |
-            llm |
+            basic_llm |
             output_parser
         )
 
@@ -175,7 +174,7 @@ def generate_response_summarization(user_response: StandardTaskResponse):
 
         independence_chain = (
             independence_prompt |
-            llm |
+            basic_llm |
             output_parser
         )
 
@@ -207,7 +206,7 @@ def generate_response_summarization(user_response: StandardTaskResponse):
             # websearch |
             # rag assisted evaluation |
             # evaluation-inclusive prompt |
-            llm |
+            basic_llm |
             output_parser
         )
 
@@ -222,7 +221,7 @@ def generate_response_summarization(user_response: StandardTaskResponse):
     summarization_prompt = ChatPromptTemplate.from_messages([
         ("system", "You are a hiring manager."
                    "Your job is to summarize eligibility of employment of this particular candidate."
-                   "You are presented with summarized performance of this candidate."
+                   "You are presented with summarized performance of this candidate, "
                    "on why this candidate is eligible or not eligible for employment."
                    "Freely write an opinion on why this candidate is a good or a poor choice,"
                    "explain your reasoning."
@@ -253,13 +252,22 @@ def generate_response_summarization(user_response: StandardTaskResponse):
         output_parser
     )
 
-    complete_assessment_response = assess_transcript_chain.invoke(standard_input)
+    short_filename = user_response.video_path.split('.')[0].split('/')[-1]
+    save_path = f"data/summaries/{short_filename}.json"
+
+    if exists(save_path) and not overwrite:
+        with open(save_path, 'r') as file:
+            complete_assessment_response = json.loads(file.read())
+    else:
+        # force overwrite
+        complete_assessment_response = assess_transcript_chain.invoke(standard_input)
+        print(f"{Fore.YELLOW}{Style.BRIGHT}Assessment already present, overwriting!{Fore.RESET}{Style.RESET_ALL}")
+
     print(f"{Fore.CYAN}{Style.BRIGHT}Complete assessment response:{Fore.RESET}{Style.RESET_ALL}",
           complete_assessment_response)
 
     # Save results to a file
-    short_filename = user_response.video_path.split('.')[0].split('/')[-1]
-    json_data = json.dumps({
+    json_data = {
         'task': user_response.task_text,
         'assessment': complete_assessment_response,
         'cache_accuracy': cache_accuracy,
@@ -267,12 +275,51 @@ def generate_response_summarization(user_response: StandardTaskResponse):
         'cache_focus': cache_focus,
         'cache_independence': cache_independence,
         'cache_factuality': cache_factuality
-    })
-    save_path = f"data/summaries/{short_filename}.json"
-    if exists(save_path):
-        print(f"{Fore.YELLOW}{Style.BRIGHT}Assessment already present, overwriting!{Fore.RESET}{Style.RESET_ALL}")
+    }
 
     with open(save_path, 'w') as file:
-        file.write(json_data)
+        file.write(json.dumps(json_data))
 
     return complete_assessment_response
+
+
+def is_candidate_viable(candidate_id: str):
+    # Input: filenames (ids) from summaries
+    # Filter any candidates who are not viable for this position regardless of their relative attractiveness.
+    # This function will eliminate any lying, clueless and unwilling to work candidates.
+    # Technically this algorithm is redundant to summary,
+    # but it's very difficult to get both the final filtering response and the summary in one response reliably.
+    # This is why this function also takes care of physical filesystem interactions and not only opinion creation.
+    # Because of the simplicity of this response, and it's importance, this vote will be cast at least 5 times,
+    # the result will depend on the majority of vote.
+    # For 99% of candidates, the vote will be unanimous, the rest is on the margin either way.
+
+    filtering_prompt = ChatPromptTemplate.from_messages([
+        ("system", "You are a hiring manager."
+                   "Your job is to determine if this candidate meets the minimum criteria."
+                   "You are presented with summarized performance of this candidate."
+                   "Candidate is good if he is truthful, and offers some potential."
+                   "Candidate is bad when he lies, is incompetent or clueless."
+                   "Respond with a GOOD or BAD response, DO NOT add any unnecessary text."
+                   "Response has to be VERY VERY SHORT, reply with ONLY 'good' or 'bad'."),
+        ("user", "General candidate summary: ```{assessment}```"
+                 "Candidate knowledge: ```{cache_knowledge}```"
+                 "Candidate truthfulness: ```{cache_factuality}```")
+    ])
+
+    # load candidate file
+    with open(f"data/summaries/{candidate_id}.json", 'r') as file:
+        # used: 'assessment', 'cache_knowledge', 'cache_factuality'
+        user_data_dict = json.loads(file.read())
+        print(f"{Fore.YELLOW}{Style.BRIGHT}user_file:{Fore.RESET}{Style.RESET_ALL}", user_data_dict)
+
+    chain = (
+        filtering_prompt |
+        basic_llm |
+        output_parser
+    )
+
+    viability_result = chain.invoke(user_data_dict)
+    print(f"{Fore.CYAN}{Style.BRIGHT}Candidate:{Fore.RESET}{Style.RESET_ALL}", candidate_id,
+          f"{Fore.CYAN}{Style.BRIGHT}viability:{Fore.RESET}{Style.RESET_ALL}", viability_result)
+    return viability_result
