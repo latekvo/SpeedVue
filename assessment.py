@@ -1,5 +1,7 @@
 # This file is the langchain part of this project
 import json
+import os
+import shutil
 
 from langchain_community.llms.ollama import Ollama
 from langchain_core.output_parsers import StrOutputParser
@@ -20,6 +22,11 @@ from os.path import exists
 import tiktoken
 
 from googlesearch import search
+
+
+def separate_id(filename: str):
+    # input: foo/bar/baz.faz
+    return filename.split('/')[-1].split('.')[0]
 
 # factcheck_db - google search rag - PERSISTENT | available globally | !potential issue vector!
 # candidate_XXXXXX_db - specific candidate trivia rag - RAM -> ARCHIVE | available only in the assessment scope
@@ -252,44 +259,38 @@ def generate_response_summarization(user_response: StandardTaskResponse, overwri
         output_parser
     )
 
-    short_filename = user_response.video_path.split('.')[0].split('/')[-1]
+    short_filename = separate_id(user_response.video_path)
     save_path = f"data/summaries/{short_filename}.json"
 
     if exists(save_path) and not overwrite:
         with open(save_path, 'r') as file:
-            complete_assessment_response = json.loads(file.read())
+            complete_assessment_response = json.loads(file.read())['assessment']
     else:
         # force overwrite
         complete_assessment_response = assess_transcript_chain.invoke(standard_input)
         print(f"{Fore.YELLOW}{Style.BRIGHT}Assessment already present, overwriting!{Fore.RESET}{Style.RESET_ALL}")
+        # Save results to a file
+        with open(save_path, 'w') as file:
+            file.write(json.dumps({
+                'task': user_response.task_text,
+                'assessment': complete_assessment_response,
+                'cache_accuracy': cache_accuracy,
+                'cache_knowledge': cache_knowledge,
+                'cache_focus': cache_focus,
+                'cache_independence': cache_independence,
+                'cache_factuality': cache_factuality
+            }))
 
     print(f"{Fore.CYAN}{Style.BRIGHT}Complete assessment response:{Fore.RESET}{Style.RESET_ALL}",
           complete_assessment_response)
 
-    # Save results to a file
-    json_data = {
-        'task': user_response.task_text,
-        'assessment': complete_assessment_response,
-        'cache_accuracy': cache_accuracy,
-        'cache_knowledge': cache_knowledge,
-        'cache_focus': cache_focus,
-        'cache_independence': cache_independence,
-        'cache_factuality': cache_factuality
-    }
-
-    with open(save_path, 'w') as file:
-        file.write(json.dumps(json_data))
-
     return complete_assessment_response
 
 
-def is_candidate_viable(candidate_id: str):
-    # Input: filenames (ids) from summaries
-    # Filter any candidates who are not viable for this position regardless of their relative attractiveness.
-    # This function will eliminate any lying, clueless and unwilling to work candidates.
+def is_candidate_viable(candidate_id: str, cycles: int = 3):
+    # Input: filename (id)
     # Technically this algorithm is redundant to summary,
     # but it's very difficult to get both the final filtering response and the summary in one response reliably.
-    # This is why this function also takes care of physical filesystem interactions and not only opinion creation.
     # Because of the simplicity of this response, and it's importance, this vote will be cast at least 5 times,
     # the result will depend on the majority of vote.
     # For 99% of candidates, the vote will be unanimous, the rest is on the margin either way.
@@ -307,19 +308,57 @@ def is_candidate_viable(candidate_id: str):
                  "Candidate truthfulness: ```{cache_factuality}```")
     ])
 
-    # load candidate file
-    with open(f"data/summaries/{candidate_id}.json", 'r') as file:
-        # used: 'assessment', 'cache_knowledge', 'cache_factuality'
-        user_data_dict = json.loads(file.read())
-        print(f"{Fore.YELLOW}{Style.BRIGHT}user_file:{Fore.RESET}{Style.RESET_ALL}", user_data_dict)
-
     chain = (
         filtering_prompt |
         basic_llm |
         output_parser
     )
 
-    viability_result = chain.invoke(user_data_dict)
+    # load candidate file
+    with open(f"data/summaries/{candidate_id}.json", 'r') as file:
+        # used: 'assessment', 'cache_knowledge', 'cache_factuality'
+        user_data_dict = json.loads(file.read())
+        print(f"{Fore.YELLOW}{Style.BRIGHT}user_file:{Fore.RESET}{Style.RESET_ALL}", user_data_dict)
+
+    user_score = 0
+
+    for _ in range(0, cycles+1):
+        vote_result = chain.invoke(user_data_dict).lower()
+        if 'good' in vote_result:
+            user_score += 1
+        if 'bad' in vote_result:
+            user_score -= 1
+
+    viability_result = True if user_score > 0 else False
+
     print(f"{Fore.CYAN}{Style.BRIGHT}Candidate:{Fore.RESET}{Style.RESET_ALL}", candidate_id,
-          f"{Fore.CYAN}{Style.BRIGHT}viability:{Fore.RESET}{Style.RESET_ALL}", viability_result)
+          f"{Fore.CYAN}{Style.BRIGHT}viability:{Fore.RESET}{Style.RESET_ALL}", 'high' if viability_result else 'low',
+          f"{Fore.CYAN}{Style.BRIGHT}score:{Fore.RESET}{Style.RESET_ALL}", user_score)
+
     return viability_result
+
+
+def get_summarized_candidates() -> list:
+    # all unfiltered candidates
+    return list(map(separate_id, os.listdir('data/summaries')))
+
+
+def get_raw_candidates() -> list:
+    # this one is useless for the classic pipeline without tasks being known any other way
+    return list(map(separate_id, os.listdir('data/videos')))
+
+
+def filter_summarized_candidates() -> int:
+    # Filter any candidates who are not viable for specified position regardless of their relative attractiveness.
+    # This function will eliminate any lying, clueless and unwilling to work candidates.
+    # This is why this function also takes care of physical filesystem interactions and not only opinion creation.
+    candidate_list = get_summarized_candidates()
+    filtered_count = 0
+    for candidate_id in candidate_list:
+        if not is_candidate_viable(candidate_id):
+            shutil.move(f"data/summaries/{candidate_id}", f"data/rejections/{candidate_id}")
+            filtered_count += 1
+
+    print(f"{Fore.CYAN}{Style.BRIGHT}Filtered{Fore.RESET}{Style.RESET_ALL}", filtered_count,
+          f"{Fore.CYAN}{Style.BRIGHT}candidates{Fore.RESET}{Style.RESET_ALL}")
+    return filtered_count
