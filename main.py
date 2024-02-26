@@ -6,6 +6,8 @@ from colorama import init as colorama_init
 from assessment import StandardTaskResponse, generate_response_summarization, get_raw_candidates, \
     get_summarized_candidates, filter_summarized_candidates
 
+import uvicorn
+
 colorama_init()
 
 response_list = [
@@ -41,3 +43,10 @@ print(get_summarized_candidates())
 print(get_raw_candidates())
 
 filter_summarized_candidates()
+
+# as this is currently a testing file, we use a different method of running this web server,
+# feel free to uncomment this line to run the webserver straight from main.
+"""
+if __name__ == "__main__":
+    uvicorn.run("app.api:app", host="0.0.0.0", port=8000, reload=True)
+"""

@@ -4,14 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="abdffcd6-834d-4906-9f0c-015e2aaaf545" name="Changes" comment="- added comprehensive todo list&#10;- added initial candidate viability filter&#10;- fixed critical output saving bug&#10;- other fixes">
+    <list default="true" id="abdffcd6-834d-4906-9f0c-015e2aaaf545" name="Changes" comment="user filtering added &#10;- added general filtering features&#10;- finished individual filtering feature&#10;- fixed minor errors with file saving&#10;- added other utilities&#10;- added tests of the new features">
+      <change afterPath="$PROJECT_DIR$/client/build/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/TODO_REACT_APP" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assessment.py" beforeDir="false" afterPath="$PROJECT_DIR$/assessment.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/summaries/interview_practice1.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/summaries/interview_practice1.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/summaries/interview_practice2.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/summaries/interview_practice2.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/summaries/interview_practice3.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/summaries/interview_practice3.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/summaries/interview_practice4.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/summaries/interview_practice4.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/videos/PUT_INTERVIEW_RECORDINGS_HERE.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/environment.yml" beforeDir="false" afterPath="$PROJECT_DIR$/environment.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -44,10 +42,11 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Python.main.executor": "Run",
+    "Python.server.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "main",
-    "last_opened_file_path": "/home/armado/dev/ai/ResearchChain",
+    "last_opened_file_path": "/home/armado/dev/ai/InterVue",
     "settings.editor.selected.configurable": "reference.settings.ide.settings.notifications"
   }
 }]]></component>
@@ -68,7 +67,7 @@
       <recent name="$PROJECT_DIR$/data" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python.server">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="InterVue" />
       <option name="ENV_FILES" value="" />
@@ -91,6 +90,32 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="server" type="PythonConfigurationType" factoryName="Python">
+      <module name="InterVue" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="uvicorn" />
+      <option name="PARAMETERS" value="server:app" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="true" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Python.main" />
+      <item itemvalue="Python.server" />
+    </list>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -157,7 +182,15 @@
       <option name="project" value="LOCAL" />
       <updated>1708477541698</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="user filtering added &#10;- added general filtering features&#10;- finished individual filtering feature&#10;- fixed minor errors with file saving&#10;- added other utilities&#10;- added tests of the new features">
+      <option name="closed" value="true" />
+      <created>1708604616226</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1708604616226</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -168,6 +201,7 @@
     <MESSAGE value="- added whisper support, files are now automatically transcribed from both audio, and video files&#10;- added example running cases, along with their transcriptions, all tests passed&#10;- environment.yml changes&#10;- entire pipeline has been tested multiple times, returning consistent results&#10;- fixes regarding model usage" />
     <MESSAGE value="- all assessments are now saved for further use&#10;- added more example interviews and their results&#10;- fix and expand README.md" />
     <MESSAGE value="- added comprehensive todo list&#10;- added initial candidate viability filter&#10;- fixed critical output saving bug&#10;- other fixes" />
-    <option name="LAST_COMMIT_MESSAGE" value="- added comprehensive todo list&#10;- added initial candidate viability filter&#10;- fixed critical output saving bug&#10;- other fixes" />
+    <MESSAGE value="user filtering added &#10;- added general filtering features&#10;- finished individual filtering feature&#10;- fixed minor errors with file saving&#10;- added other utilities&#10;- added tests of the new features" />
+    <option name="LAST_COMMIT_MESSAGE" value="user filtering added &#10;- added general filtering features&#10;- finished individual filtering feature&#10;- fixed minor errors with file saving&#10;- added other utilities&#10;- added tests of the new features" />
   </component>
 </project>
