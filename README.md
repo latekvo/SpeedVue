@@ -32,5 +32,5 @@ In the main file, you can then choose the file to analyze by specifying it's pat
 ---
 
 ### Dependencies:
-This tool requires `ffmpeg`, `python 8`, `conda` and `ollma` to be installed.\
+This tool requires `ffmpeg`, `python 3.8`, `conda` and `ollma` to be installed.\
 Any python-related dependencies are automatically installed via conda (see 'How to run').

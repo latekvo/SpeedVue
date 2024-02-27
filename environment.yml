@@ -86,3 +86,4 @@ dependencies:
       - google==3.0.0
       - soupsieve==2.5
       - uvicorn[standard]
+      - python-multipart

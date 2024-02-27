@@ -10,6 +10,17 @@
 <body>
     <h1>Welcome to SpeedVue!</h1>
     <p>Submit your video below.</p>
-    <input type="file">
+    <form method="POST" enctype="multipart/form-data" action="candidate/upload">
+        <label for="task_id">Task ID:</label>
+        <input type="text" id="task_id" name="task_id">
+
+        <label for="recruitment_id">Recruitment ID:</label>
+        <input type="text" id="recruitment_id" name="recruitment_id">
+
+        <label for="video">Select file:</label>
+        <input type="file" id="video" name="video">
+
+        <button type="submit">Upload</button>
+    </form>
 </body>
 </html>

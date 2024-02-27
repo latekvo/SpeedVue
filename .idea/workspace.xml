@@ -4,13 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="abdffcd6-834d-4906-9f0c-015e2aaaf545" name="Changes" comment="user filtering added &#10;- added general filtering features&#10;- finished individual filtering feature&#10;- fixed minor errors with file saving&#10;- added other utilities&#10;- added tests of the new features">
-      <change afterPath="$PROJECT_DIR$/client/build/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/src/TODO_REACT_APP" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server.py" afterDir="false" />
+    <list default="true" id="abdffcd6-834d-4906-9f0c-015e2aaaf545" name="Changes" comment="- add basic fastapi web server&#10;- add mock website&#10;- create basic react app structure&#10;- add uvicorn run configuration">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assessment.py" beforeDir="false" afterPath="$PROJECT_DIR$/assessment.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/build/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/client/build/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/environment.yml" beforeDir="false" afterPath="$PROJECT_DIR$/environment.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server.py" beforeDir="false" afterPath="$PROJECT_DIR$/server.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,12 +42,13 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Python.main.executor": "Run",
+    "Python.python 3.8.executor": "Run",
     "Python.server.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "main",
     "last_opened_file_path": "/home/armado/dev/ai/InterVue",
-    "settings.editor.selected.configurable": "reference.settings.ide.settings.notifications"
+    "settings.editor.selected.configurable": "preferences.keymap"
   }
 }]]></component>
   <component name="PyConsoleOptionsProvider">
@@ -190,7 +191,15 @@
       <option name="project" value="LOCAL" />
       <updated>1708604616226</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="- add basic fastapi web server&#10;- add mock website&#10;- create basic react app structure&#10;- add uvicorn run configuration">
+      <option name="closed" value="true" />
+      <created>1708907156749</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1708907156749</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -202,6 +211,7 @@
     <MESSAGE value="- all assessments are now saved for further use&#10;- added more example interviews and their results&#10;- fix and expand README.md" />
     <MESSAGE value="- added comprehensive todo list&#10;- added initial candidate viability filter&#10;- fixed critical output saving bug&#10;- other fixes" />
     <MESSAGE value="user filtering added &#10;- added general filtering features&#10;- finished individual filtering feature&#10;- fixed minor errors with file saving&#10;- added other utilities&#10;- added tests of the new features" />
-    <option name="LAST_COMMIT_MESSAGE" value="user filtering added &#10;- added general filtering features&#10;- finished individual filtering feature&#10;- fixed minor errors with file saving&#10;- added other utilities&#10;- added tests of the new features" />
+    <MESSAGE value="- add basic fastapi web server&#10;- add mock website&#10;- create basic react app structure&#10;- add uvicorn run configuration" />
+    <option name="LAST_COMMIT_MESSAGE" value="- add basic fastapi web server&#10;- add mock website&#10;- create basic react app structure&#10;- add uvicorn run configuration" />
   </component>
 </project>

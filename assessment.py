@@ -35,6 +35,7 @@ def separate_id(filename: str):
 #         for master_, we have to find something much better to give more insight based on the responses.
 #         for embedding_, choice is between MiniLM-L6 and Glove, but probably MiniLM-L6 is the much better option.
 
+
 basic_model_name = "zephyr:7b-beta-q5_K_M"  # "llama2-uncensored:7b"
 basic_model_base_name = basic_model_name.split(':')[0]
 basic_token_limit = 4096  # depending on VRAM, try 2048, 3072 or 4096. 2048 works great on 4GB VRAM
