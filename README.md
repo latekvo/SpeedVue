@@ -11,12 +11,10 @@ To test it's functionality, create this file structure:
 * data
   * videos
     * [your interview videos here]
-  * audio
-    * [alternative to videos]
-  * web
-    * [web assets, leave empty]
   * summaries
     * [cached end results of individual assessments]
+  * text
+    * [cached transcripts of individual assessments]
 
 In the main file, you can then choose the file to analyze by specifying it's path.
 

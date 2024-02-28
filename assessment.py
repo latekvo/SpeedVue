@@ -339,14 +339,36 @@ def is_candidate_viable(candidate_id: str, cycles: int = 3):
     return viability_result
 
 
+def get_raw_candidates() -> list:
+    # this one is useless for the classic pipeline without tasks being known any other way
+    return list(map(separate_id, os.listdir('data/videos')))
+
+
 def get_summarized_candidates() -> list:
     # all unfiltered candidates
     return list(map(separate_id, os.listdir('data/summaries')))
 
 
-def get_raw_candidates() -> list:
-    # this one is useless for the classic pipeline without tasks being known any other way
-    return list(map(separate_id, os.listdir('data/videos')))
+def get_unprocessed_candidates() -> list:
+    # NOTE: this function should only be used for UI if at all, caching is already done by the summarization function!!!
+    raw_list = get_raw_candidates()
+    sum_list = get_summarized_candidates()
+    diff_list = []
+    for candidate in raw_list:
+        if candidate not in sum_list:
+            diff_list.append(candidate)
+    return diff_list
+
+
+def summarize_candidates(task_list, overwrite: bool = False) -> int:
+    # todo: fix after db migration
+    candidate_list = get_raw_candidates()
+    summarized_count = 0
+    for candidate_id in candidate_list:
+        generate_response_summarization(task_list, overwrite)
+
+    print(f"{Fore.CYAN}{Style.BRIGHT}Performed summarization on all available candidates.{Fore.RESET}{Style.RESET_ALL}")
+    return summarized_count
 
 
 def filter_summarized_candidates() -> int:

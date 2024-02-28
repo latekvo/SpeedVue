@@ -10,6 +10,8 @@ import uvicorn
 
 colorama_init()
 
+# NOTE: until we formalize to use a single file type for the input, we will keep on specifying the whole filename,
+#       instead of just an identifier
 response_list = [
     StandardTaskResponse(
         file_name='data/videos/interview_practice1.webm',

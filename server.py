@@ -2,6 +2,7 @@ from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
+from . import assessment
 
 app = FastAPI()
 
@@ -22,7 +23,20 @@ async def update_item(video: UploadFile = File(...), task_id: str = Form(...), r
 
     with open(f"data/videos/{video.filename}", "wb") as buffer:
         contents = await video.read()
-        buffer.write(contents)
+        # buffer.write(contents)
 
     return {"video_task_id": task_id, "video_recruitment_id": recruitment_id,
             "video_filename": video.filename, "video_size": video.size}
+
+
+# TODO: people will be selected from the list, by default all but a few may be chosen as well
+@app.post("/manager/start_summarizing")
+async def start_summarizing():
+    assessment.summarize_candidates([])
+    return {"response": "summarized filtering started"}
+
+
+@app.post("/manager/start_filtering")
+async def start_filtering():
+    assessment.filter_summarized_candidates()
+    return {"response": "summarized filtering started"}
