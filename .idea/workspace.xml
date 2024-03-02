@@ -4,14 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="abdffcd6-834d-4906-9f0c-015e2aaaf545" name="Changes" comment="- add fully functional upload api&#10;- add basic testing frontend for file uploads, with more features coming soon&#10;- other minor fixes">
-      <change afterPath="$PROJECT_DIR$/database.py" afterDir="false" />
+    <list default="true" id="abdffcd6-834d-4906-9f0c-015e2aaaf545" name="Changes" comment="- add sqlite database and a simple wrapper&#10;- add API calls for summarizing and filtering&#10;- fixed README.md&#10;- other changes related to project presentation">
+      <change afterPath="$PROJECT_DIR$/tables.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assessment.py" beforeDir="false" afterPath="$PROJECT_DIR$/assessment.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/summaries/interview_practice2.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/summaries/interview_practice2.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server.py" beforeDir="false" afterPath="$PROJECT_DIR$/server.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database.py" beforeDir="false" afterPath="$PROJECT_DIR$/database.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,7 +45,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;last_opened_file_path&quot;: &quot;/home/armado/dev/ai/InterVue&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
 }</component>
   <component name="PyConsoleOptionsProvider">
@@ -208,7 +204,15 @@
       <option name="project" value="LOCAL" />
       <updated>1708993592733</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="- add sqlite database and a simple wrapper&#10;- add API calls for summarizing and filtering&#10;- fixed README.md&#10;- other changes related to project presentation">
+      <option name="closed" value="true" />
+      <created>1709086282467</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1709086282467</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -222,6 +226,7 @@
     <MESSAGE value="user filtering added &#10;- added general filtering features&#10;- finished individual filtering feature&#10;- fixed minor errors with file saving&#10;- added other utilities&#10;- added tests of the new features" />
     <MESSAGE value="- add basic fastapi web server&#10;- add mock website&#10;- create basic react app structure&#10;- add uvicorn run configuration" />
     <MESSAGE value="- add fully functional upload api&#10;- add basic testing frontend for file uploads, with more features coming soon&#10;- other minor fixes" />
-    <option name="LAST_COMMIT_MESSAGE" value="- add fully functional upload api&#10;- add basic testing frontend for file uploads, with more features coming soon&#10;- other minor fixes" />
+    <MESSAGE value="- add sqlite database and a simple wrapper&#10;- add API calls for summarizing and filtering&#10;- fixed README.md&#10;- other changes related to project presentation" />
+    <option name="LAST_COMMIT_MESSAGE" value="- add sqlite database and a simple wrapper&#10;- add API calls for summarizing and filtering&#10;- fixed README.md&#10;- other changes related to project presentation" />
   </component>
 </project>
