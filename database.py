@@ -1,14 +1,12 @@
-import sqlite3
-from sqlite3 import Error, Connection
 import uuid
 
 from colorama import Fore, Style
 
 from typing import List
 from typing import Optional
-from sqlalchemy import ForeignKey, Table, Column
+from sqlalchemy import ForeignKey, Table, Column, create_engine, Connection, Engine
 from sqlalchemy import String
-from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.orm import DeclarativeBase, Session
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
@@ -25,7 +23,7 @@ applicants
 - recruiters [id, company_id, position, email, country, city] (these accounts are hard-bound to a company) 
 - applicants [id, email, name, surname, phone, phone_country_code, country, city, address]
 
-# note: for now, as the response format, and LLM pipeline changes rapidly, response test results / summarizations
+# note: for now, as the response format and LLM pipeline changes rapidly, response test results / summarizations
         will be kept outside of the DB, in JSON files associated by ID with both the application.id and response.id
 """
 
@@ -63,6 +61,12 @@ class Applicant(Base):
 
     applications: Mapped[List['Application']] = relationship(back_populates='applicant')
 
+    def __repr__(self) -> str:
+        return (f"Applicant(id={self.id!r}, name={self.name!r}, surname={self.surname!r}, email={self.email!r}, "
+                f"city={self.city!r}, phone={self.phone!r}, phone_country_code={self.phone_country_code!r}, "
+                f"phone_extension={self.phone_extension!r}, country={self.country!r}, address={self.address!r}, "
+                f"applications={self.applications!r})")
+
 
 class Company(Base):
     __tablename__ = 'company'
@@ -72,6 +76,10 @@ class Company(Base):
     shortname: Mapped[Optional[str]]
 
     recruiters: Mapped[List['Recruiter']] = relationship(back_populates='company')
+
+    def __repr__(self) -> str:
+        return (f"Company(id={self.id!r}, name={self.name!r}, shortname={self.shortname!r}, "
+                f"recruiters={self.recruiters!r})")
 
 
 class Recruiter(Base):
@@ -88,6 +96,11 @@ class Recruiter(Base):
     company: Mapped['Company'] = relationship(back_populates='recruiters')
     batches: Mapped[List['Batch']] = relationship(back_populates='recruiters', secondary=association_table)
 
+    def __repr__(self) -> str:
+        return (f"Recruiter(id={self.id!r}, name={self.name!r}, surname={self.surname!r}, title={self.title!r}, "
+                f"email={self.email!r}, country={self.country!r}, city={self.city!r}), "
+                f"company={self.company!r}, batches={self.batches!r}")
+
 
 class Batch(Base):
     __tablename__ = 'batch'
@@ -99,6 +112,10 @@ class Batch(Base):
     recruiters: Mapped[List['Recruiter']] = relationship(back_populates='batches', secondary=association_table)
     applications: Mapped[List['Application']] = relationship(back_populates='batch')
 
+    def __repr__(self) -> str:
+        return (f"Batch(id={self.id!r}, job_title={self.job_title!r}, description={self.description!r}, "
+                f"recruiters={self.recruiters!r}, applications={self.applications!r})")
+
 
 class Application(Base):
     __tablename__ = 'application'
@@ -108,47 +125,33 @@ class Application(Base):
     batch: Mapped['Batch'] = relationship(back_populates='applications')
     responses: Mapped[List['Response']] = relationship(back_populates='application')
 
+    def __repr__(self) -> str:
+        return (f"Application(id={self.id!r}, applicant={self.applicant!r}, batch={self.batch!r}, "
+                f"responses={self.responses!r})")
+
 
 class Response(Base):
     __tablename__ = 'response'
     id: Mapped[str] = mapped_column(String, primary_key=True, default=hashid)
 
     task_text: Mapped[str] = mapped_column(String(800))
+    # note: for now, as the response format and LLM pipeline changes rapidly, response test results / summarizations
+    #       will be kept outside the DB, in JSON files associated by ID with either the application or response
 
     application: Mapped['Application'] = relationship(back_populates='responses')
 
-
-def open_database(path) -> Connection:
-    try:
-        db = sqlite3.connect(path)
-        print(f"{Fore.GREEN}{Style.BRIGHT}Successfully connected to SQL database{Fore.RESET}{Style.RESET_ALL}")
-    except Error as err:
-        print(f"{Fore.GREEN}COULD NOT OPEN SQLITE DATABASE:{Fore.RESET}")
-        raise err
-    return db
+    def __repr__(self) -> str:
+        return f"Response(id={self.id!r}, task_text={self.task_text!r}, application={self.application!r})"
 
 
-def db_execute(db: Connection, sql: str):
-    # high level abstraction, do not use externally
-    db_cursor = db.cursor()
-    res = db_cursor.execute(sql).fetchall()
-    db.commit()
-    return res
+engine_singleton = None
 
 
-def db_insert(db: Connection, table: str, values: tuple):
-    # high level abstraction, do not use externally
-    sql = f"INSERT INTO {table} VALUES(?" + ', ?' * (len(values)-1) + ')'
-    db_cursor = db.cursor()
-    res = db_cursor.execute(sql, values)
-    db.commit()
-    return res
-
-
-def db_remove(db: Connection, table: str, condition: str):
-    # high level abstraction, do not use externally
-    sql = f"DELETE FROM {table} WHERE {condition}"
-    db_cursor = db.cursor()
-    res = db_cursor.execute(sql)
-    db.commit()
-    return res
+def get_engine(url='sqlite:///:memory:') -> Engine:
+    global engine_singleton
+    if isinstance(engine_singleton, Engine):
+        return engine_singleton
+    else:
+        engine = create_engine(url)
+        engine_singleton = engine
+        return engine
